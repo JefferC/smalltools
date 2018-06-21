@@ -1,3 +1,5 @@
+# encoding: utf8
+
 
 import json,os,re
 import pandas
@@ -24,12 +26,19 @@ hc = HiveContext(sc)
 #print spark.__class__
 
 # If the data format is Json, This is simple.(If you dont what to change the columns' name)
-def read_josn():
+def read_josn(svtb=False):
     df = spark.read.json(json_data)
     # select * from global_temp.hardon
     df.createGlobalTempView("hardon")
     # select * from hardon where
     df.createOrReplaceTempView("hardon")
+    # Save As table. u shell always format as parquet.so forget about csv,text.
+    # mode: overwrite - delete all and create new
+    #     : append    - add new file
+    #     : error     - throw error if file exists
+    #     : ignore    - do nothing if file exists
+    if svtb:
+        df.write.format('parquet').bucketBy(4,'result').partitionBy("gm").mode("overwrite").saveAsTable("SavedHardon")
 
 def LetsPlayThisGame():
     read_josn()
@@ -142,7 +151,26 @@ def OpenParquetFile():
 # ------------------------------- SaveAsTable ------------------------------ #
 
 def SaveAsHiveTable():
-    
+    # So we need a table too....
+    read_josn(True)
+
+#SaveAsHiveTable()
+
+# ------------------------------- Read -------------------------------- #
+
+def ReadParquet():
+    p = r"D:\Profile\PyScript\Pj1\sparkpworkspace\spark-warehouse\savedhardon"
+    for absd,nouse,listdir in os.walk(p):
+        for i in listdir:
+            if i.split('.')[-1] == 'parquet':
+                i = absd + os.sep + i
+                print i
+                df3 = spark.sql("select * from parquet.`%s`" %i)
+                df3.show()
+
+
+ReadParquet()
+
 
 
 

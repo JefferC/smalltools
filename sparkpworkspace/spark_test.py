@@ -7,6 +7,7 @@ from pyspark.sql import SparkSession,HiveContext,Row
 from pyspark import SparkConf,SparkContext
 
 json_data = r"D:\Profile\PyScript\Pj1\data\spark_json.txt"
+parquet_data = r"D:\\Profile\\PyScript\\Pj1\\data\\000000_0"
 
 #conf = SparkConf().appName("first")
 #sc = SparkContext(conf=conf)
@@ -117,8 +118,31 @@ def SparkUDF():
 
 
 
-SparkUDF()
+#SparkUDF()
 
+
+# --------------------------------- Parquet -------------------------------- #
+
+def OpenParquetFile():
+    df2 = spark.read.parquet(parquet_data)
+    df2.createOrReplaceTempView('parquet_data')
+    spark.sql("select * from parquet_data").show()
+    df2.select('id','map1').write.save(r"D:\Profile\spark\\bb",mode='overwrite')
+    dirs = os.listdir(r"D:\Profile\spark\\bb")
+    for i in dirs:
+        if i.split('.')[-1] == 'parquet':
+            df3 = spark.read.parquet("D:\Profile\spark\\bb\\%s" %i)
+            df3.show()
+            break
+
+
+#OpenParquetFile()
+
+
+# ------------------------------- SaveAsTable ------------------------------ #
+
+def SaveAsHiveTable():
+    
 
 
 

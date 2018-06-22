@@ -20,6 +20,8 @@ spark = SparkSession.builder.appName("first").getOrCreate()
 
 sc = spark.sparkContext
 
+sc.setLogLevel("ERROR")
+
 hc = HiveContext(sc)
 
 
@@ -47,6 +49,7 @@ def LetsPlayThisGame():
         try:
             #b = spark.sql(a.decode('gbk').encode('utf8'))
             b = spark.sql(a)
+
             b.show()
         except Exception as e:
             print e
@@ -160,6 +163,9 @@ def SaveAsHiveTable():
 
 def ReadParquet():
     p = r"D:\Profile\PyScript\Pj1\sparkpworkspace\spark-warehouse\savedhardon"
+    p = r"D:\Profile\cp\savedhardon_linux"
+    # Very Low
+    '''
     for absd,nouse,listdir in os.walk(p):
         for i in listdir:
             if i.split('.')[-1] == 'parquet':
@@ -167,6 +173,11 @@ def ReadParquet():
                 print i
                 df3 = spark.sql("select * from parquet.`%s`" %i)
                 df3.show()
+    '''
+    # look here
+    beautiful = spark.read.option('mergeSchema','true').parquet(p)
+    #beautiful.printSchema()
+    beautiful.show()
 
 
 ReadParquet()

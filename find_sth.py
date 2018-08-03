@@ -14,8 +14,9 @@ except ImportError:
 
 
 def getchild(e,l=[]):
-    if e.getchildren() == [] and e.text is not None and e.text.strip() not in ["",'none']:
-        l.append([e.tag,e.text])
+    if e.getchildren() == []:
+        if e.text is not None and e.text.strip() not in ["",'none']:
+            l.append([e.tag,e.text])
     else:
         for i in e.getchildren():
             getchild(i,l)

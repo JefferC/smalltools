@@ -5,7 +5,7 @@
 
 
 # 写正则,顺便说下代码里读取作业的时候全部改小写了.所以匹配也要小写的
-searchstring = "StaticTime".lower()
+searchstring = "t_kafka_Mobile_Connector".lower()
 
 # 只搜索列表内的控件，如果列表包含all，则全部搜索。代码里了会lower这些值，可改
 Controls = [
@@ -13,10 +13,13 @@ Controls = [
 ]
 
 # 是否启用正则匹配
-regexp = False
+regexp = True
 
 # 目前没用
 path = ""
+
+# 搜索文件类型 - > ktr, kjb
+SourchFileType = 'kjb'
 
 # stg
 # kettle_dir = r"D:\caijiefei\bd-embdrepo-stg"
